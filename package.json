@@ -1,0 +1,8 @@
+{
+  "name": "sylph-plugin-remote-gateways",
+  "version": "1.0.0",
+  "main": "main.js",
+  "author": "Matt Barker <jetdevuk@gmail.com>",
+  "license": "Apache-2.0",
+  "private": false
+}
