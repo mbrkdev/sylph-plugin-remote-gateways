@@ -5,9 +5,9 @@ const gateways = {};
 
 let gatewayData;
 if (process.env.NODE_ENV === 'local') {
-  gatewayData = require(path.join(process.env(), './local-gateways.json'));
+  gatewayData = require(path.join(process.cwd(), './local-gateways.json'));
 } else {
-  gatewayData = require(path.join(process.env(), './gateways.json'));
+  gatewayData = require(path.join(process.cwd(), './gateways.json'));
 }
 
 Object.keys(gatewayData).forEach(async (gateway) => {
@@ -38,11 +38,13 @@ Object.keys(gatewayData).forEach(async (gateway) => {
   gateways[gateway].capabilities = caps.data && caps.data.routes || null;
 });
 
-function injectGateways(req, res, next) {
-  req.gateways = gateways;
-  next();
+function injectGateways() {
+  return (req, res, next) => {
+    req.gateways = gateways;
+    next();
+  }
 }
 
 module.exports = {
-  default: injectGateways
+  injectGateways
 }
