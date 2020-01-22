@@ -24,14 +24,12 @@ Object.keys(gatewayData).forEach(async (gateway) => {
       if (!gateways[gateway].capabilities[url] && gateways[gateway].capabilities) {
         return { error: 'Capability does not exist on remote server', code: 'ERROR_NOT_CAPABLE' };
       }
-      const o = options || {};
+      const opts = options || {};
       const { key } = gateways[gateway];
-      const body = {
-        body: payload || {},
-        ...o,
-      };
-      if (key) body[key] = key;
-      const res = await post(`${endpoint}/${url}`, body);
+      const body = { ...payload };
+      const data = { body, ...opts };
+      if (key) body.key = key;
+      const res = await post(`${endpoint}/${url}`, data);
       return res.data;
     },
     capabilities: null,
@@ -39,6 +37,7 @@ Object.keys(gatewayData).forEach(async (gateway) => {
   const caps = await get(`${endpoint}/capabilities`);
   // eslint-disable-next-line no-mixed-operators
   gateways[gateway].capabilities = caps.data && caps.data.routes || null;
+  gateways[gateway].key = gatewayData[gateway].key;
 });
 
 function injectGateways() {
