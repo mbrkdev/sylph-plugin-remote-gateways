@@ -1,5 +1,5 @@
 const { get, post } = require('httpie');
-const path = require('path')
+const path = require('path');
 
 const gateways = {};
 
@@ -25,10 +25,13 @@ Object.keys(gatewayData).forEach(async (gateway) => {
         return { error: 'Capability does not exist on remote server', code: 'ERROR_NOT_CAPABLE' };
       }
       const o = options || {};
-      const res = await post(`${endpoint}/${url}`, {
+      const { key } = gateways[gateway];
+      const body = {
         body: payload || {},
-        ...o
-      });
+        ...o,
+      };
+      if (key) body[key] = key;
+      const res = await post(`${endpoint}/${url}`, body);
       return res.data;
     },
     capabilities: null,
@@ -42,9 +45,9 @@ function injectGateways() {
   return (req, res, next) => {
     req.gateways = gateways;
     next();
-  }
+  };
 }
 
 module.exports = {
-  injectGateways
-}
+  injectGateways,
+};
