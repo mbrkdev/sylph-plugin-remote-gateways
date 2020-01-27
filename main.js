@@ -11,13 +11,13 @@ if (process.env.NODE_ENV === 'local') {
 }
 
 Object.keys(gatewayData).forEach(async (gateway) => {
-  const endpoint = gatewayData[gateway].endpoints[process.env.NODE_ENV];
+  const { address, key } = gatewayData[gateway].endpoints[process.env.NODE_ENV];
   gateways[gateway] = {
     get: async (url, options) => {
       if (!gateways[gateway].capabilities[url] && gateways[gateway].capabilities) {
         return { error: 'Capability does not exist on remote server', code: 'ERROR_NOT_CAPABLE' };
       }
-      const res = await get(`${endpoint}/${url}`, options || {});
+      const res = await get(`${address}/${url}`, options || {});
       return res.data;
     },
     post: async (url, payload, options) => {
@@ -25,19 +25,18 @@ Object.keys(gatewayData).forEach(async (gateway) => {
         return { error: 'Capability does not exist on remote server', code: 'ERROR_NOT_CAPABLE' };
       }
       const opts = options || {};
-      const { key } = gateways[gateway];
       const body = { ...payload };
       const data = { body, ...opts };
       if (key) body.key = key;
-      const res = await post(`${endpoint}/${url}`, data);
+      const res = await post(`${address}/${url}`, data);
       return res.data;
     },
     capabilities: null,
+    key,
   };
-  const caps = await get(`${endpoint}/capabilities`);
+  const caps = await get(`${address}/capabilities`);
   // eslint-disable-next-line no-mixed-operators
   gateways[gateway].capabilities = caps.data && caps.data.routes || null;
-  gateways[gateway].key = gatewayData[gateway].key;
 });
 
 function injectGateways() {
