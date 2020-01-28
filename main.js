@@ -33,7 +33,7 @@ Object.keys(gatewayData).forEach(async (gateway) => {
       const data = { body, ...opts };
       if (key) body.key = key;
       try {
-        const res = await post(`${address}/${url}`, { data });
+        const res = await post(`${address}/${url}`, data);
         return res.data;
       } catch ({ data: errorData }) {
         return errorData;
