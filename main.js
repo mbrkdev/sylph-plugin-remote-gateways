@@ -17,8 +17,12 @@ Object.keys(gatewayData).forEach(async (gateway) => {
       if (gateways[gateway].capabilities && !gateways[gateway].capabilities[url]) {
         return { error: 'Capability does not exist on remote server', code: 'ERROR_NOT_CAPABLE' };
       }
-      const res = await get(`${address}/${url}`, options || {});
-      return res.data;
+      try {
+        const res = await get(`${address}/${url}`, options || {});
+        return res.data;
+      } catch ({ data: errorData }) {
+        return errorData;
+      }
     },
     post: async (url, payload, options) => {
       if (!gateways[gateway].capabilities[url] && gateways[gateway].capabilities) {
@@ -28,8 +32,12 @@ Object.keys(gatewayData).forEach(async (gateway) => {
       const body = { ...payload };
       const data = { body, ...opts };
       if (key) body.key = key;
-      const res = await post(`${address}/${url}`, data);
-      return res.data;
+      try {
+        const res = await post(`${address}/${url}`, { data });
+        return res.data;
+      } catch ({ data: errorData }) {
+        return errorData;
+      }
     },
     capabilities: null,
     key,
