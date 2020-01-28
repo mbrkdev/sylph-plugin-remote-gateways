@@ -34,9 +34,15 @@ Object.keys(gatewayData).forEach(async (gateway) => {
     capabilities: null,
     key,
   };
-  const caps = await get(`${address}/capabilities`);
+  let capabilities;
+  try {
+    const { data } = await get(`${address}/capabilities`);
+    capabilities = data.routes;
+  } catch (error) {
+    console.log('Remote Gateways: Capabilities not found for', address);
+  }
   // eslint-disable-next-line no-mixed-operators
-  gateways[gateway].capabilities = caps.data && caps.data.routes || null;
+  gateways[gateway].capabilities = capabilities || null;
 });
 
 function injectGateways() {
