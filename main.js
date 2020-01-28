@@ -53,5 +53,5 @@ function injectGateways() {
 }
 
 module.exports = {
-  injectGateways,
+  injectGateways, gateways,
 };
