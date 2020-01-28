@@ -14,7 +14,7 @@ Object.keys(gatewayData).forEach(async (gateway) => {
   const { address, key } = gatewayData[gateway].endpoints[process.env.NODE_ENV];
   gateways[gateway] = {
     get: async (url, options) => {
-      if (!gateways[gateway].capabilities[url] && gateways[gateway].capabilities) {
+      if (gateways[gateway].capabilities && !gateways[gateway].capabilities[url]) {
         return { error: 'Capability does not exist on remote server', code: 'ERROR_NOT_CAPABLE' };
       }
       const res = await get(`${address}/${url}`, options || {});
