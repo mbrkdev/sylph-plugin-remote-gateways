@@ -7,14 +7,19 @@
   "license": "Apache-2.0",
   "private": false,
   "scripts": {
-    "test": "echo \"TODO: no test specified\" && exit 0"
+    "test": "cross-env CI=true NODE_ENV=test npx ava test.js",
+    "dev-test": "cross-env NODE_ENV=test npx ava test.js --watch"
   },
   "dependencies": {
-    "httpie": "^2.0.0-next.3"
+    "httpie": "^2.0.0-next.3",
+    "nano-rgb": "^1.1.0"
   },
   "devDependencies": {
+    "ava": "^3.5.0",
+    "cross-env": "^7.0.0",
     "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-ava": "^10.2.0",
     "eslint-plugin-import": "^2.20.0"
   }
 }
