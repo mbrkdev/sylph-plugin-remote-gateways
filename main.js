@@ -89,5 +89,5 @@ function injectGateways() {
 }
 
 module.exports = {
-  injectGateways, gateways,
+  injectGateways, initializeGateways, getGateways: () => gateways,
 };
